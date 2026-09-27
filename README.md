@@ -1,80 +1,151 @@
 # Collect Macro
 
-Small Windows app that loops a grind routine for [Collect 1 Million Items](https://www.roblox.com/games/133363783004873/Collect-1-Million-Items) on Roblox.
+Collect Macro is a Windows application made for automating a simple grind routine in [Collect 1 Million Items](https://www.roblox.com/games/133363783004873/Collect-1-Million-Items) on Roblox.
 
-You pick **Conveyor** or **Magnet**, set how long each run lasts, hit **Start**, and it handles launch → join → equip tool → wait → leave → rejoin until you stop it. Everything is keyboard/mouse automation on your desktop — no injectors, no memory hacks, no modified Roblox client.
+The application handles the repetitive parts of the routine for you, including joining the game, selecting your grind tool, waiting for the configured amount of time, leaving the game, and repeating the process.
 
-Built for myself-style “set it and watch the log” use. YMMV on slower PCs or if Roblox moves menu items around.
+## Download
 
-## Screenshots
+You do **not** need Python, Git, Roblox Studio, or any development tools to use Collect Macro.
 
-_Add a screenshot of the Home tab here once you have a build — helps people know what they’re downloading._
+### Download the `.exe`
 
-## Download the `.exe`
+1. Open the **Releases** section on the right side of this GitHub page.
+2. Open the **latest release**.
+3. Scroll down to the **Assets** section.
+4. Find **`CollectMacro.exe`**.
+5. Click **`CollectMacro.exe`** to download it.
+6. Once the download is finished, open the file.
+7. If Windows shows a security warning, select **More info** and then **Run anyway** if you trust the file.
 
-**Easiest:** use GitHub Actions (no Python needed on your PC).
+The `.exe` is the complete application. You do not need to install Python or download any additional files.
 
-1. Go to **Actions** → **Build Windows EXE**.
-2. Click **Run workflow** → run it on `main`.
-3. When the job finishes, open the run and download the **`CollectMacro-windows`** artifact (zip with `dist/` inside).
+## How to use
 
-**Or build locally on Windows:**
+Once Collect Macro is open:
 
-```powershell
-git clone https://github.com/z54nd/collect-macro.git
-cd collect-macro
-.\build.ps1
-```
+1. Make sure Roblox is installed and working normally.
+2. Open the **Settings** tab.
+3. Select your Roblox executable if required.
+4. Choose your grind tool:
 
-Your exe lands in `dist\`. You can copy `CollectMacro.exe` anywhere; settings go in `config.json` next to the exe or in `%APPDATA%\CollectMacro\config.json`.
+   * **Conveyor**
+   * **Magnet**
+5. Set the amount of time you want the macro to stay in the game.
+6. Check the other settings and adjust them if necessary.
+7. Go back to the **Home** tab.
+8. Press **Start**.
+9. Collect Macro will handle the routine automatically.
 
-> Builds have to run on **Windows**. PyInstaller doesn’t cross-compile from Mac/Linux.
+You can stop the macro at any time using the **Stop** button or the configured emergency stop hotkey.
 
-## Quick start
+## What the macro does
 
-1. Install Roblox if you haven’t already.
-2. Open **Settings** → point **Roblox executable** at `RobloxPlayerBeta.exe` (Browse button).
-3. Choose **Conveyor** (default ~32s) or **Magnet** (~17s). Change durations if you want.
-4. Set **grind tool key** (default `1`) and bump **join delay** if the game loads slowly.
-5. **Home** → **Start**. **Stop** or **F9** (emergency stop) kills the loop immediately.
+A normal cycle works like this:
 
-If leaving the game acts weird, tweak the **Leave** delays in Settings. The app uses **Esc → Down → Enter** like you would from the keyboard — same fragility as doing it by hand.
+1. Starts Roblox if it is not already running.
+2. Joins **Collect 1 Million Items**.
+3. Waits for the game to load.
+4. Focuses the Roblox window.
+5. Presses the configured grind tool key.
+6. Waits for the configured grind duration.
+7. Leaves the Roblox experience.
+8. Waits before joining again.
+9. Repeats the process until you stop the macro.
 
-## What it actually does each cycle
+The application is designed to reuse an existing Roblox process instead of intentionally opening multiple Roblox clients.
 
-1. Starts Roblox if it’s not open (optional).
-2. Joins place ID `133363783004873`.
-3. Waits your join delay, focuses the Roblox window.
-4. Presses your tool hotkey.
-5. Waits for Conveyor/Magnet duration.
-6. Leaves the experience (menu keys).
-7. Waits, rejoins, repeats — until you stop.
+## Grind tools
 
-It won’t spawn a second Roblox if one is already running.
+Collect Macro supports two grind tools:
 
-## Development
+**Conveyor**
 
-Python 3.11+, mainly tested as a packaged exe on Windows. UI work can happen on Mac; the macro itself needs Windows (`pywin32`, window focus, etc.).
+The default routine is approximately **32 seconds** per run.
 
-```bash
-python -m venv .venv
-.venv\Scripts\activate          # Windows
-pip install -r requirements.txt
-pip install -e .
-collect-macro
-```
+**Magnet**
 
-From a checkout without install:
+The default routine is approximately **17 seconds** per run.
 
-```bash
-set PYTHONPATH=src
-python -m collect_macro
-```
+The timings can be changed from the application settings if the game changes or your setup requires different timings.
+
+## Windows security warning
+
+Because Collect Macro is distributed as a standalone Windows executable and may not have a commercial code-signing certificate, Windows Defender or SmartScreen may display a warning when you first open it.
+
+If you downloaded the file from the official GitHub repository and understand what you are running, Windows may allow you to continue by selecting:
+
+**More info → Run anyway**
+
+Only run executable files that you trust.
+
+## Updates
+
+When a new version is released, download the newest `CollectMacro.exe` from the latest GitHub Release.
+
+You can simply replace your old executable with the new one.
+
+Your settings may be stored separately depending on the version and configuration of the application, so updating the executable should not require rebuilding or installing Python.
+
+## Troubleshooting
+
+### Roblox does not open
+
+Make sure Roblox is installed and that you can launch it normally before starting Collect Macro.
+
+Check the Roblox executable path under **Settings** if the application asks you to select it.
+
+### The macro starts too early
+
+Increase the **join delay** in Settings.
+
+This gives Roblox more time to load before Collect Macro starts interacting with the game.
+
+### The wrong tool is selected
+
+Check the configured **grind tool key** and make sure it matches the key used by the game.
+
+The default key is `1`.
+
+### Leaving the game does not work
+
+The leave routine uses normal keyboard interaction with Roblox. If Roblox changes its menu layout or the timing is different on your computer, adjust the relevant leave delays in Settings.
+
+### The macro stops unexpectedly
+
+Check the activity log on the Home tab.
+
+The log can show what the application was doing when the problem occurred.
+
+## Requirements
+
+Collect Macro is intended for **Windows**.
+
+You need:
+
+* Windows
+* Roblox
+* A working internet connection
+* The downloaded `CollectMacro.exe`
+
+You do **not** need:
+
+* Python
+* Git
+* Visual Studio
+* Roblox Studio
+* Any additional programming software
 
 ## Disclaimer
 
-This is **not** official Roblox software. Automating gameplay might break Roblox’s Terms of Use or game rules — that’s on you. Authors aren’t responsible if your account gets warned or banned. Use a throwaway or accept the risk.
+Collect Macro is an independent third-party application and is **not affiliated with, endorsed by, or sponsored by Roblox**.
+
+Automating gameplay may be against the rules of Roblox or the individual game. You are responsible for how you use the application and for following the applicable rules.
+
+Use the software at your own discretion.
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
+MIT License.
+
+See [`LICENSE`](LICENSE) for the full license.
