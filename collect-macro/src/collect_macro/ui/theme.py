@@ -1,9 +1,0 @@
-"""UI theme constants."""
-
-ACCENT = "#3B82F6"
-ACCENT_HOVER = "#2563EB"
-SUCCESS = "#22C55E"
-DANGER = "#EF4444"
-CARD_BORDER = "#2A2A2E"
-CARD_FG = "#1A1A1D"
-FONT_FAMILY = "Segoe UI"
