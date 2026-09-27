@@ -21,7 +21,7 @@ _Add a screenshot of the Home tab here once you have a build — helps people kn
 **Or build locally on Windows:**
 
 ```powershell
-git clone https://github.com/YOUR_USER/collect-macro.git
+git clone https://github.com/z54nd/collect-macro.git
 cd collect-macro
 .\build.ps1
 ```
