@@ -17,14 +17,15 @@ SolidCompression=yes
 WizardStyle=modern
 PrivilegesRequired=admin
 SetupIconFile=collect_macro.ico
-UninstallDisplayIcon={app}\{#MyAppExeName}
+UninstallDisplayIcon={app}\collect_macro.ico
 
 [Files]
 Source: "dist\CollectMacro.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "collect_macro.ico"; DestDir: "{app}"; Flags: ignoreversion
 
 [Icons]
-Name: "{group}\CollectMacro"; Filename: "{app}\{#MyAppExeName}"; IconFilename: "{app}\{#MyAppExeName}"
-Name: "{autodesktop}\CollectMacro"; Filename: "{app}\{#MyAppExeName}"; IconFilename: "{app}\{#MyAppExeName}"
+Name: "{group}\CollectMacro"; Filename: "{app}\{#MyAppExeName}"; IconFilename: "{app}\collect_macro.ico"
+Name: "{autodesktop}\CollectMacro"; Filename: "{app}\{#MyAppExeName}"; IconFilename: "{app}\collect_macro.ico"
 
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Description: "Launch CollectMacro"; Flags: nowait postinstall skipifsilent
