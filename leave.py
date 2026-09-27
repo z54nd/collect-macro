@@ -15,28 +15,36 @@ from collect_macro.config.models import Settings
 from collect_macro.roblox.input_backend import press_key, tap_key
 
 
+def _wait_or_cancel(seconds: float, cancel_check: Callable[[], bool]) -> bool:
+    """Sleep in short slices so an emergency stop is never held by a delay."""
+    deadline = time.monotonic() + max(0.0, seconds)
+    while time.monotonic() < deadline:
+        if cancel_check():
+            return False
+        time.sleep(min(0.1, deadline - time.monotonic()))
+    return not cancel_check()
+
+
 def leave_game(settings: Settings, cancel_check: Callable[[], bool], log: Callable[[str], None]) -> bool:
     if cancel_check():
         return False
     if log:
         log("Leaving game (Esc menu sequence)…")
-    time.sleep(max(0.0, settings.leave_delay_sec))
-    if cancel_check():
+    if not _wait_or_cancel(settings.leave_delay_sec, cancel_check):
         return False
 
     tap_key("esc")
-    time.sleep(settings.leave_esc_delay_sec)
-    if cancel_check():
+    if not _wait_or_cancel(settings.leave_esc_delay_sec, cancel_check):
         return False
 
     if settings.leave_use_leave_key_sequence:
         # Typical in-game menu: first item may be Resume; Leave is often below.
         tap_key("down")
-        time.sleep(settings.leave_menu_nav_delay_sec)
-        if cancel_check():
+        if not _wait_or_cancel(settings.leave_menu_nav_delay_sec, cancel_check):
             return False
         tap_key("enter")
-        time.sleep(settings.leave_confirm_delay_sec)
+        if not _wait_or_cancel(settings.leave_confirm_delay_sec, cancel_check):
+            return False
     else:
         press_key("esc")
 
