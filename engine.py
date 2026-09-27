@@ -4,14 +4,14 @@ from __future__ import annotations
 
 import threading
 import time
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Callable
 
 from collect_macro.automation.states import MacroAction
 from collect_macro.config.models import Settings
 from collect_macro.logging_util.activity_log import ActivityLog
 from collect_macro.roblox import focus_roblox_window, is_roblox_running, join_experience, launch_roblox
-from collect_macro.roblox.input_backend import type_grind_key
+from collect_macro.roblox.input_backend import tap_key
 from collect_macro.roblox.leave import leave_game
 
 
@@ -29,11 +29,13 @@ class MacroEngine:
         activity_log: ActivityLog,
         on_state: Callable[[MacroAction], None] | None = None,
         on_stats: Callable[[EngineStats], None] | None = None,
+        on_finished: Callable[[], None] | None = None,
     ) -> None:
         self._settings_provider = settings_provider
         self._log = activity_log
         self._on_state = on_state
         self._on_stats = on_stats
+        self._on_finished = on_finished
         self._cancel = threading.Event()
         self._thread: threading.Thread | None = None
         self._stats = EngineStats()
@@ -147,12 +149,25 @@ class MacroEngine:
         if self._cancel.is_set():
             return False
 
-        focus_roblox_window(self._log.log)
+        if not focus_roblox_window(self._log.log):
+            self._set_state(MacroAction.ERROR)
+            self._log.log("Cannot send tool inputs because the Roblox window is not available.")
+            return False
 
         self._set_state(MacroAction.SELECTING_TOOL)
         self._log.log(f"Selecting grind tool key '{settings.grind_tool_key}'.")
-        type_grind_key(settings.grind_tool_key)
-        time.sleep(0.3)
+        tap_key(settings.grind_tool_key)
+        if not self._wait(settings.tool_activation_delay_sec, MacroAction.SELECTING_TOOL):
+            return False
+
+        # The experience requires an interaction after the tool is selected.
+        # Keep this user-configurable in case the game's bindings change.
+        self._log.log(f"Activating tool with '{settings.tool_activation_key}'.")
+        if not focus_roblox_window(self._log.log):
+            self._set_state(MacroAction.ERROR)
+            self._log.log("Roblox window lost focus before tool activation.")
+            return False
+        tap_key(settings.tool_activation_key)
 
         grind_sec = settings.grind_duration_sec()
         self._log.log(f"Grinding with {settings.grind_tool} for {grind_sec:.0f}s.")
@@ -208,3 +223,5 @@ class MacroEngine:
         finally:
             self._finalize_session()
             self._log.log("Macro stopped.")
+            if self._on_finished:
+                self._on_finished()
