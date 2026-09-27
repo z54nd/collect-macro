@@ -146,6 +146,6 @@ Use the software at your own discretion.
 
 ## License
 
-MIT License.
+Private License.
 
 See [`LICENSE`](LICENSE) for the full license.
