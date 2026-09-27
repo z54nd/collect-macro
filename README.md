@@ -142,7 +142,7 @@ Collect Macro is an independent third-party application and is **not affiliated 
 
 Automating gameplay may be against the rules of Roblox or the individual game. You are responsible for how you use the application and for following the applicable rules.
 
-Use the software at your own discretion.
+Use the software at your own discretion. The developer is not responsible for actions taken against your Roblox account as a result of using the application.
 
 ## License
 
