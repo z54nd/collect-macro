@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "collect-macro"
+version = "1.0.0"
+description = "User-configured Roblox Collect gameplay routine automation (keyboard/mouse only)"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "customtkinter>=5.2.2",
+    "pynput>=1.7.7",
+    "PyAutoGUI>=0.9.54",
+    "psutil>=6.1.0",
+]
+
+[project.optional-dependencies]
+windows = ["pywin32>=308"]
+
+[project.scripts]
+collect-macro = "collect_macro.main:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
