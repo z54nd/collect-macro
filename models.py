@@ -14,6 +14,8 @@ class Settings:
     conveyor_duration_sec: int = 32
     magnet_duration_sec: int = 17
     grind_tool_key: str = "1"
+    tool_activation_key: str = "e"
+    tool_activation_delay_sec: float = 0.35
     join_delay_sec: float = 25.0
     leave_delay_sec: float = 2.0
     rejoin_delay_sec: float = 8.0
@@ -41,6 +43,10 @@ class Settings:
             errors.append(f"Invalid grind tool: {self.grind_tool}")
         if not self.grind_tool_key.strip():
             errors.append("Grind tool key cannot be empty.")
+        if not self.tool_activation_key.strip():
+            errors.append("Tool activation key cannot be empty.")
+        if self.tool_activation_delay_sec < 0:
+            errors.append("Tool activation delay cannot be negative.")
         if self.conveyor_duration_sec < 1 or self.magnet_duration_sec < 1:
             errors.append("Grind durations must be at least 1 second.")
         return errors
