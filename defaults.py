@@ -15,6 +15,8 @@ DEFAULT_SETTINGS: dict = {
     "conveyor_duration_sec": 32,
     "magnet_duration_sec": 17,
     "grind_tool_key": "1",
+    "tool_activation_key": "e",
+    "tool_activation_delay_sec": 0.35,
     "join_delay_sec": 25.0,
     "leave_delay_sec": 2.0,
     "rejoin_delay_sec": 8.0,
